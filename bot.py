@@ -7,7 +7,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-VIDEO_URL = 'https://www.youtube.com/watch?v=1qYz7rfgLWE'
+VIDEO_URL = 'https://www.youtube.com/watch?v=yq7vEyCrBk0&t=698s'
 @bot.command()
 async def play(ctx):
     channel = ctx.author.voice.channel
@@ -49,7 +49,11 @@ async def leave(ctx):
     voice_client = ctx.voice_client
     await voice_client.disconnect()
 
-def randomSongs():
-    song = None;
+#@bot.command()
+#async def countdown():
+    #days = 0;
 
-bot.run('MTE1MjcxMzc2MTYwMjQyMDgxNw.GmHZBK.ON5io1VVUZ7CxvvTKVe 4mdrYDbhDHmGb9vchYg')
+#def randomSongs():
+    #song = None;
+
+bot.run('MTE1MjcxMzc2MTYwMjQyMDgxNw.GIzYlh.5UNSTp_nYt0RrE5HSB4YfgsqsEJmZdhEQJHnJw')
