@@ -1,6 +1,7 @@
 import discord
 import responses
 import youtube_dl
+import json
 from discord.ext import commands
 
 intents = discord.Intents.default()
@@ -56,4 +57,7 @@ async def leave(ctx):
 #def randomSongs():
     #song = None;
 
-bot.run('MTE1MjcxMzc2MTYwMjQyMDgxNw.GIzYlh.5UNSTp_nYt0RrE5HSB4YfgsqsEJmZdhEQJHnJw')
+with open('config.json') as config_file:
+    config = json.load(config_file)
+TOKEN = config['token']
+bot.run(TOKEN)
