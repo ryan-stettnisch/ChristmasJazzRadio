@@ -1,4 +1,6 @@
 import discord
+import random
+import queue
 import youtube_dl
 import json
 from discord.ext import commands
@@ -7,7 +9,26 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-VIDEO_URL = 'https://www.youtube.com/watch?v=-su3-j0jp7I'
+
+def randomSong():
+    song = None;
+    songList = [
+        'https://www.youtube.com/watch?v=KhqNTjbQ71A',
+        'https://www.youtube.com/watch?v=wcddNN9gwiw',
+        'https://www.youtube.com/watch?v=1qYz7rfgLWE',
+        'https://www.youtube.com/watch?v=68zIDuD0tn0',
+        'https://www.youtube.com/watch?v=YrSEcDiedgc',
+        'https://www.youtube.com/watch?v=P_dI6fVZwd0',
+        'https://www.youtube.com/watch?v=hwacxSnc4tI',
+        'https://www.youtube.com/watch?v=N8NcQzMQN_U',
+        'https://www.youtube.com/watch?v=QJ5DOWPGxwg'
+
+
+    ]
+    song = random.choice(songList)
+    return song
+
+
 @bot.command()
 async def play(ctx):
     channel = ctx.author.voice.channel
@@ -22,6 +43,9 @@ async def play(ctx):
         voice_client = await channel.connect()
 
     if not voice_client.is_playing():
+        VIDEO_URL = randomSong()
+
+    if not voice_client.is_playing():
         try:
             ydl_opts = {
                 'format': 'bestaudio/best',
@@ -32,6 +56,12 @@ async def play(ctx):
                 }],
                 'verbose': True,
                 'extractor': 'youtube',
+                'external_downloader': 'ffmpeg',
+                'external_downloader_args': [
+                    '-reconnect', '2', #maybe 1
+                    '-reconnect_streamed', '2', #2
+                    '-reconnect_delay_max', '10', #5
+                ],
             }
 
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -51,10 +81,8 @@ async def leave(ctx):
 
 #@bot.command()
 #async def countdown():
-    #days = 0;
+    #days = 0
 
-#def randomSongs():
-    #song = None;
 
 with open('config.json') as config_file:
     config = json.load(config_file)
