@@ -28,7 +28,6 @@ def randomSong():
     song = random.choice(songList)
     return song
 
-
 @bot.command()
 async def play(ctx):
     channel = ctx.author.voice.channel
