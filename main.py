@@ -1,46 +1,16 @@
 import asyncio
-
+import datetime
 import discord
 import random
-import queue
 import youtube_dl
 import json
-from discord.ext import commands
+from discord.ext import commands, tasks
+from lists import gifList, radioList, jazzList
 
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 global isPlaying
-
-def randomSong(songType):
-    song = None
-    if songType == "Jazz":
-        jazzList = [
-            'https://www.youtube.com/watch?v=t8C_sEWYKyg&t=5391s', # A Christmas Coffee Shop Ambience with Relaxing Christmas Jazz Music, Crackling Fire, and Cafe Sounds
-            'https://www.youtube.com/watch?v=5tXht-NGmc0', # New York Jazz Lounge - Merry Christmas
-            'https://www.youtube.com/watch?v=Eh5rrcK685k', # Christmas Jazz Intrumental Music for Good Mood🎄Cozy Christmas Coffee Shop Ambience & Warm Fireplace
-            'https://www.youtube.com/watch?v=lJlEQim-yMo', # Relaxing Christmas Jazz Music 10 Hours
-            'https://www.youtube.com/watch?v=DOIc3gaMBjo', # Christmas Starbucks 🎄 Christmas Jazz – Relaxing Christmas Carols and Jazz Holidays Music for Winter
-            'https://www.youtube.com/watch?v=_H6nNysTQs8', # Relaxing Christmas Carol Music | 8 Hours | Quiet and Comfortable Instrumental Music | Cozy and Calm
-            'https://www.youtube.com/watch?v=vVLEtZ-d1nw', # 3 Hours of Christmas Jazz Music with Snowfall and Traditional Christmas Songs & Carols
-            'https://www.youtube.com/watch?v=Jo1wpKmIfEw', # Happy Christmas Jazz Instrumental Piano Music 10 Hours
-        ]
-        song = random.choice(jazzList)
-        return song
-    else:
-        radioList = [
-            'https://www.youtube.com/watch?v=KhqNTjbQ71A',  # Last Christmas
-            'https://www.youtube.com/watch?v=wcddNN9gwiw',  # It's the Most Wonderful Time of the Year
-            'https://www.youtube.com/watch?v=1qYz7rfgLWE',  # Rockin' Around The Christmas Tree
-            'https://www.youtube.com/watch?v=68zIDuD0tn0',  # Winter Wonderland
-            'https://www.youtube.com/watch?v=YrSEcDiedgc',  # Baby It's Cold Outside
-            'https://www.youtube.com/watch?v=P_dI6fVZwd0',  # A Holly Jolly Christmas
-            'https://www.youtube.com/watch?v=hwacxSnc4tI',  # The Christmas Song
-            'https://www.youtube.com/watch?v=N8NcQzMQN_U',  # Feliz Navidad
-            'https://www.youtube.com/watch?v=QJ5DOWPGxwg',  # It's Beginning To Look A Lot Like Christmas
-        ]
-    song = random.choice(radioList)
-    return song
 
 async def playMusic(ctx,channel, voice_client, musicType):
     global isPlaying
@@ -121,9 +91,35 @@ async def leave(ctx):
     voice_client = ctx.voice_client
     await voice_client.disconnect()
 
+
 #@bot.command()
 #async def countdown():
     #days = 0
+
+@bot.command()
+async def startCountdown(ctx):
+    countdown.start(ctx)
+
+@tasks.loop(seconds=3)
+async def countdown(ctx):
+    channel = ctx.channel.id
+    gif = random.choice(gifList)
+    await ctx.send(gif)
+
+@bot.command()
+async def christmasGif(ctx):
+    gif = None
+    randomGif = random.choice(gifList)
+    await ctx.send(randomGif)
+
+def randomSong(songType):
+    song = None
+    if songType == "Jazz":
+        song = random.choice(jazzList)
+        return song
+    else:
+        song = random.choice(radioList)
+        return song
 
 with open('config.json') as config_file:
     config = json.load(config_file)
