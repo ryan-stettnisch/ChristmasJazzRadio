@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 import asyncio
-import datetime
 import discord
 import random
 import youtube_dl
@@ -100,7 +100,7 @@ async def leave(ctx):
 async def startCountdown(ctx):
     countdown.start(ctx)
 
-@tasks.loop(seconds=90)
+@tasks.loop(seconds=120)
 async def countdown(ctx):
     channel = ctx.channel.id
     gif = random.choice(gifList)
