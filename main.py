@@ -100,7 +100,7 @@ async def leave(ctx):
 async def startCountdown(ctx):
     countdown.start(ctx)
 
-@tasks.loop(seconds=120)
+@tasks.loop(seconds=90)
 async def countdown(ctx):
     channel = ctx.channel.id
     gif = random.choice(gifList)
