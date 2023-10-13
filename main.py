@@ -115,7 +115,7 @@ def amountOfDays():
 
 async def countdown(ctx):
     while True:
-        delayTime = createDelay(6,0)
+        delayTime = createDelay(5,0)
         await asyncio.sleep(delayTime)
         days = amountOfDays()
         channel = ctx.channel.id
@@ -141,4 +141,4 @@ def randomSong(songType):
 with open('config.json') as config_file:
     config = json.load(config_file)
 TOKEN = config['token']
-bot.run(TOKEN)
+bot.run(TOKEN
