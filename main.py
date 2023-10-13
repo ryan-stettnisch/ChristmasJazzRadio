@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import asyncio
+from datetime import datetime, timedelta
+
 import discord
 import random
 import youtube_dl
@@ -91,21 +93,36 @@ async def leave(ctx):
     voice_client = ctx.voice_client
     await voice_client.disconnect()
 
-
-#@bot.command()
-#async def countdown():
-    #days = 0
-
 @bot.command()
 async def startCountdown(ctx):
-    countdown.start(ctx)
+    bot.loop.create_task(countdown(ctx))
 
-@tasks.loop(seconds=120)
+def createDelay(hour,minute):
+    time = datetime.now()
+    targetTime = time.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if targetTime <= time:
+        targetTime += timedelta(days=1)
+
+    delay = (targetTime - time).seconds
+    return delay
+
+def amountOfDays():
+    day_of_year = datetime.now().timetuple().tm_yday
+    day = 359 - day_of_year
+    if day_of_year > 359:
+        day = 365 - (day_of_year - 359)
+    return day
+
 async def countdown(ctx):
-    channel = ctx.channel.id
-    gif = random.choice(gifList)
-    await ctx.send(gif)
-
+    while True:
+        delayTime = createDelay(6,0)
+        await asyncio.sleep(delayTime)
+        days = amountOfDays()
+        channel = ctx.channel.id
+        await ctx.send(f"Ho Ho Ho! It's a Dr. Pepper Christmas!")
+        await ctx.send(random.choice(gifList))
+        await ctx.send(f"There are **{days}** days until Christmas!")
+        await asyncio.sleep(10)
 @bot.command()
 async def christmasGif(ctx):
     gif = None
@@ -125,4 +142,3 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 TOKEN = config['token']
 bot.run(TOKEN)
-#TEST
