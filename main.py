@@ -6,13 +6,16 @@ import discord
 import random
 import youtube_dl
 import json
+
+from discord import app_commands
 from discord.ext import commands, tasks
 from lists import gifList, radioList, jazzList
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 global isPlaying
+
 
 async def playMusic(ctx,channel, voice_client, musicType):
     global isPlaying
@@ -115,7 +118,7 @@ def amountOfDays():
 
 async def countdown(ctx):
     while True:
-        delayTime = createDelay(5,0)
+        delayTime = createDelay(6,10)
         await asyncio.sleep(delayTime)
         days = amountOfDays()
         channel = ctx.channel.id
@@ -123,11 +126,12 @@ async def countdown(ctx):
         await ctx.send(random.choice(gifList))
         await ctx.send(f"There are **{days}** days until Christmas!")
         await asyncio.sleep(10)
-@bot.command()
-async def christmasGif(ctx):
-    gif = None
-    randomGif = random.choice(gifList)
-    await ctx.send(randomGif)
+@bot.tree.command(name='christmasgif', description='Sends a random Christmas gif')
+async def christmasgif(interaction: discord.Interaction):
+    random_gif = random.choice(gifList)
+    await interaction.response.send_message(random_gif)
+
+
 
 def randomSong(songType):
     song = None
@@ -137,6 +141,11 @@ def randomSong(songType):
     else:
         song = random.choice(radioList)
         return song
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user}!')
+    await bot.tree.sync()  # Sync commands globally
 
 with open('config.json') as config_file:
     config = json.load(config_file)
